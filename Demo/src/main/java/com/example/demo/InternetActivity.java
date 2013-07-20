@@ -7,7 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
-import android.net.wifi.WifiManager;
+import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.widget.Toast;
@@ -30,7 +30,6 @@ public class InternetActivity extends Activity {
         super.onStart();
 
         IntentFilter filter = new IntentFilter();
-        filter.addAction(WifiManager.NETWORK_STATE_CHANGED_ACTION);
         filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
         registerReceiver(this.reciever, filter);
     }
@@ -50,13 +49,12 @@ public class InternetActivity extends Activity {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            boolean noConnectivity = intent.getBooleanExtra(ConnectivityManager.EXTRA_NO_CONNECTIVITY, false);
-            String reason = intent.getStringExtra(ConnectivityManager.EXTRA_REASON);
-
-            if (noConnectivity) {
-                Toast.makeText(context, "Not Connected: " + reason, Toast.LENGTH_LONG).show();
-            } else {
+            ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(CONNECTIVITY_SERVICE);
+            NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+            if (activeNetworkInfo != null && activeNetworkInfo.isConnected()) {
                 Toast.makeText(context, "Connected", Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(context, "Not Connected", Toast.LENGTH_LONG).show();
             }
         }
 
