@@ -1,12 +1,14 @@
 package com.example.demo;
 
 import android.app.Activity;
+import android.app.NotificationManager;
 import android.app.WallpaperManager;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.NotificationCompat;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -31,7 +33,7 @@ public class ImagesActivity extends Activity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 ImageAdapter adapter = (ImageAdapter) parent.getAdapter();
-                new SetWallpaperTask(ImagesActivity.this).execute((int)adapter.getItemId(position));
+                new SetWallpaperTask(ImagesActivity.this).execute((int) adapter.getItemId(position));
             }
         });
     }
@@ -68,6 +70,23 @@ public class ImagesActivity extends Activity {
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
             Toast.makeText(getBaseContext(), "Wallpaper set", Toast.LENGTH_SHORT).show();
+            showNotification();
+        }
+
+        private void showNotification() {
+
+            NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context)
+                    .setSmallIcon(R.drawable.ic_launcher)
+                    .setContentTitle("New Wallpaper")
+                    .setContentText(context.getString(R.string.app_name))
+                    .setAutoCancel(true);
+
+//            NotificationCompat.BigPictureStyle bigStyle = new NotificationCompat.BigPictureStyle()
+//                    .bigPicture(BitmapFactory.decodeFile(uri));
+//            mBuilder.setStyle(bigStyle);
+
+            NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+            notificationManager.notify(0, mBuilder.build());
         }
     }
 
