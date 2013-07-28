@@ -66,11 +66,7 @@ public class ListExampleActivity extends ListActivity {
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     @Override
     protected void onListItemClick(ListView l, final View v, final int position, long id) {
-        Person person = peopleAdapter.getItem(position);
-        peopleAdapter.remove(person);
-        peopleAdapter.notifyDataSetChanged();
-
-        /*v.animate().setDuration(500).alpha(0).withEndAction(new Runnable() {
+        v.animate().setDuration(500).alpha(0).withEndAction(new Runnable() {
             @Override
             public void run() {
                 Person person = peopleAdapter.getItem(position);
@@ -78,7 +74,7 @@ public class ListExampleActivity extends ListActivity {
                 peopleAdapter.notifyDataSetChanged();
                 v.setAlpha(1);
             }
-        });*/
+        });
     }
 
     private static class PeopleAdapter extends ArrayAdapter<Person> {
@@ -95,6 +91,7 @@ public class ListExampleActivity extends ListActivity {
             TextView address;
         }
 
+        @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
         public View getView(int position, View convertView, ViewGroup parent) {
             ViewHolder holder;
             if (convertView == null) {
@@ -111,11 +108,12 @@ public class ListExampleActivity extends ListActivity {
             holder.name.setText(person.getName());
             holder.address.setText(person.getAddress());
 
-            //hideView(convertView);
-            //convertView.animate().alpha(1).setDuration(500).start();
+            hideView(convertView);
+            convertView.animate().alpha(1).setDuration(300).start();
             return convertView;
         }
 
+        @TargetApi(Build.VERSION_CODES.HONEYCOMB)
         private void hideView(View view) {
             ObjectAnimator animator = ObjectAnimator.ofFloat(view, "alpha", 0);
             AnimatorSet set = new AnimatorSet();
